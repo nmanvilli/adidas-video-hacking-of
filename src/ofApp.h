@@ -11,8 +11,8 @@ class ofApp : public ofBaseApp{
         const bool DEBUG = true;
     
         // Screen configuration
-        const int SCREEN_WIDTH = 1440;
-        const int SCREEN_HEIGHT = 900;
+        const int SCREEN_WIDTH = 1024;
+        const int SCREEN_HEIGHT = 768;
         const int FRAME_RATE = 60;
     
         // Webcam configuration
@@ -20,8 +20,16 @@ class ofApp : public ofBaseApp{
         const int CAM_HEIGHT = 480;
         const int CAM_FRAME_RATE = 60;
 
+        const int CAM_X_BEGIN_GAP = 40;
+        const int CAM_X_END_GAP = 20;
+        const int CAM_Y_BEGIN_GAP = 5;
+        const int CAM_Y_END_GAP = 5;
+    
+        float camDetectionWidth;
+        float camDetectionHeight;
+
         // Detection configuration
-        const int BRIGHTNESS_TRESHOLD = 200;
+        const int BRIGHTNESS_TRESHOLD = 220;
         const int DETECTION_TIMEOUT = 12; // expressed in number of frames
 
         // Base OF methods
@@ -51,7 +59,8 @@ class ofApp : public ofBaseApp{
         int maxBrightnessY;
 
         // Pointer management
-        ofPoint point;
+        ofVec2f point;
         OSPointerManager pointerManager;
+        float diagonal;
 
 };

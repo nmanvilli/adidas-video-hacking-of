@@ -12,7 +12,14 @@ void ofApp::setup(){
     cam.setDeviceID(1);
     cam.setup(CAM_WIDTH, CAM_HEIGHT);
     cam.setDesiredFrameRate(CAM_FRAME_RATE);
-    webcamScreenScale = SCREEN_WIDTH / CAM_WIDTH;
+
+    camDetectionWidth = CAM_WIDTH - CAM_X_BEGIN_GAP - CAM_X_END_GAP;
+    camDetectionHeight = CAM_HEIGHT - CAM_Y_BEGIN_GAP - CAM_Y_END_GAP;
+    //cout << camDetectionWidth << endl;
+    //cout << camDetectionHeight << endl;
+
+    webcamScreenScale = SCREEN_WIDTH / camDetectionWidth;
+    diagonal = sqrt( pow(camDetectionWidth, 2) + pow(camDetectionHeight, 2) );
     
     // Set detection timer as expired
     detectionTimer = DETECTION_TIMEOUT;
@@ -40,14 +47,14 @@ void ofApp::update(){
         maxBrightness = 0;
         maxBrightnessX = 0;
         maxBrightnessY = 0;
-        for (int x = 0; x < CAM_WIDTH; x++) {
-            for (int y = 0; y < CAM_HEIGHT; y++) {
+        for (int x = CAM_X_BEGIN_GAP; x < (camDetectionWidth + CAM_X_BEGIN_GAP); x++) {
+            for (int y = CAM_Y_BEGIN_GAP; y < (camDetectionHeight + CAM_Y_BEGIN_GAP); y++) {
                 ofColor pointColor = camPixels.getColor(x, y);
                 float pointBrightness = pointColor.getBrightness();
                 if (pointBrightness > maxBrightness) {
                     maxBrightness = pointBrightness;
-                    maxBrightnessX = CAM_WIDTH - x;
-                    maxBrightnessY = y;
+                    maxBrightnessX = camDetectionWidth - (x - CAM_X_BEGIN_GAP);
+                    maxBrightnessY = y - CAM_Y_BEGIN_GAP;
                 }
             }
         }
@@ -55,8 +62,18 @@ void ofApp::update(){
         // Check if the conditions are right to send the position
         if (maxBrightness >= BRIGHTNESS_TRESHOLD) {
             detectionTimer = 0;
-            point.x = maxBrightnessX * webcamScreenScale;
-            point.y = maxBrightnessY * webcamScreenScale;
+            if (strokeInitiated) {
+                ofVec2f newPoint = ofVec2f( maxBrightnessX * webcamScreenScale, maxBrightnessY * webcamScreenScale );
+                float distToNewPoint = point.distance(newPoint);
+                if (distToNewPoint > 0 ) {
+                    float speedToNewPoint = ofMap(distToNewPoint, 0, diagonal/2, 0, 1);
+                    point.interpolate(newPoint, speedToNewPoint);
+                }
+            }
+            else {
+                point.x = maxBrightnessX * webcamScreenScale;
+                point.y = maxBrightnessY * webcamScreenScale;
+            }
             isDrawing = true;
         }
         else if (detectionTimer < DETECTION_TIMEOUT) {
@@ -86,13 +103,13 @@ void ofApp::update(){
 void ofApp::draw(){
     
     if (DEBUG) {
-        cam.draw(0,0);
+        cam.draw(SCREEN_WIDTH, 0, -SCREEN_WIDTH, SCREEN_HEIGHT);
         
         if (isDrawing) {
             ofPushStyle();
             ofSetColor(255, 0, 0);
             ofNoFill();
-            ofDrawCircle(maxBrightnessX, maxBrightnessY, 40);
+            ofDrawCircle(point.x, point.y, 40);
             ofPopStyle();
         }
         
