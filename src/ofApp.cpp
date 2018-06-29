@@ -69,7 +69,6 @@ void ofApp::update(){
                 float distToNewPoint = point.distance(newPoint);
                 if (distToNewPoint > 0.0 ) {
                     float speedToNewPoint = ofMap(distToNewPoint, 0, camDetectionDiagonal, 0, 1) * MOVEMENT_INTERPOLATION_SPEED_FACTOR;
-                    cout << speedToNewPoint << endl;
                     point.interpolate(newPoint, speedToNewPoint);
                 }
             }
@@ -117,6 +116,6 @@ void ofApp::draw(){
             ofPopStyle();
         }
         
-        //cout << "X: " + ofToString(point.x) + ", Y: " + ofToString(point.y) + ", B: " + ofToString(maxBrightness) << endl;
+        cout << "X: " + ofToString(point.x) + ", Y: " + ofToString(point.y) + ", B: " + ofToString(maxBrightness) << endl;
     }
 }
