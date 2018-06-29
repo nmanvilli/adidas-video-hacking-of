@@ -23,10 +23,9 @@ class ofApp : public ofBaseApp{
         const int CAM_X_BEGIN_GAP = 40;
         const int CAM_X_END_GAP = 20;
         const int CAM_Y_BEGIN_GAP = 0;
-        const int CAM_Y_END_GAP = 10;
+        const int CAM_Y_END_GAP = ( CAM_HEIGHT * (CAM_X_BEGIN_GAP + CAM_X_END_GAP) / CAM_WIDTH ) - CAM_Y_BEGIN_GAP;
     
-        float camDetectionWidth;
-        float camDetectionHeight;
+        const float MOVEMENT_INTERPOLATION_SPEED_FACTOR = 0.5; // Max = 1
 
         // Detection configuration
         const int BRIGHTNESS_TRESHOLD = 220;
@@ -43,6 +42,11 @@ class ofApp : public ofBaseApp{
     
         // Ratio between webcam resolution and screen resolution (depends on width)
         float webcamScreenScale;
+    
+        // Cam detection field
+        float camDetectionWidth;
+        float camDetectionHeight;
+        float camDetectionDiagonal;
     
         // Flag: sending coordinates while it is true
         bool isDrawing;
@@ -61,6 +65,5 @@ class ofApp : public ofBaseApp{
         // Pointer management
         ofVec2f point;
         OSPointerManager pointerManager;
-        float diagonal;
 
 };
