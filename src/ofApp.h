@@ -22,8 +22,8 @@ class ofApp : public ofBaseApp{
 
         const int CAM_X_BEGIN_GAP = 40;
         const int CAM_X_END_GAP = 20;
-        const int CAM_Y_BEGIN_GAP = 5;
-        const int CAM_Y_END_GAP = 5;
+        const int CAM_Y_BEGIN_GAP = 0;
+        const int CAM_Y_END_GAP = 10;
     
         float camDetectionWidth;
         float camDetectionHeight;
